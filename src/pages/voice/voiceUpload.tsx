@@ -102,7 +102,7 @@ const Upload: React.FC = () => {
     if (fileUploaded && file) {
       const formData = new FormData();
       formData.append('file', file);
-      navigate('/loadingTest'); //시연용
+      navigate('/loading'); //시연용
 
       try {
         const response = await fetch(`${API_BASE_URL}/upload/`, {
