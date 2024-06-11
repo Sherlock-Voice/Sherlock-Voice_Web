@@ -11,7 +11,6 @@ import PhishingCategory from './phishingCategory';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-
 interface CircleProps {
   score: number;
 }
@@ -252,8 +251,10 @@ const CreditScore: React.FC<CreditScoreProps> = ({ score }) => {
         } else {
           setVoicePhishing(data.VoicePhishing || "");
           setVoicePhishingProb(data.VoicePhishing_prob || 83);
-          const receivedKeywords = data.Keywords || [];
-          setKeywords(receivedKeywords);
+          if (data.VoicePhishing === "보이스피싱 전화") {
+            const receivedKeywords = data.Keywords || [];
+            setKeywords(receivedKeywords);
+          }
         }
       })
       .catch(error => {
@@ -310,7 +311,7 @@ const CreditScore: React.FC<CreditScoreProps> = ({ score }) => {
     }
   }
 
-  const showPhishingCategory = voicePhishingProb >= 40 && dangerKeywords.some(keyword => keywords.includes(keyword));
+  const showPhishingCategory = voicePhishing === "보이스피싱 전화" && voicePhishingProb >= 40 && dangerKeywords.some(keyword => keywords.includes(keyword));
 
   return (
     <Container>
@@ -327,7 +328,7 @@ const CreditScore: React.FC<CreditScoreProps> = ({ score }) => {
             <GaugeImage href={iconPath} iconPath={iconPath} />
           </Gauge>
           <AlertMessage color={messageColor}>{alertMessage}</AlertMessage>
-          {keywords.length > 0 && (
+          {voicePhishing === "보이스피싱 전화" && keywords.length > 0 && (
             <KeywordListContainer>
               <KeywordTitle>🚨 감지된 위험 키워드 🚨</KeywordTitle>
               <KeywordList>
